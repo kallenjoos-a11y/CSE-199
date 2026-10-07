@@ -70,6 +70,36 @@
   }
 }
 
+.full-schedule {
+  width: min(100%, 760px);
+  box-sizing: border-box;
+}
+
+.schedule-list {
+  width: 100%;
+  display: grid;
+  gap: 16px;
+}
+
+.activity-card {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  text-align: left;
+  background: var(--background);
+}
+
+.activity-card h2,
+.activity-card h3 {
+  margin-top: 0;
+}
+
+.activity-card ul {
+  margin-bottom: 0;
+}
+
 #next-steps {
   display: flex;
   border-top: 1px solid var(--border);

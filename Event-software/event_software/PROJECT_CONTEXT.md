@@ -79,6 +79,9 @@ View personalized schedule
 
 - Focus on spectators, not separate athlete or organizer experiences.
 - Use sample or seeded event data if needed to demonstrate the complete flow.
+- The first schedule version supports individual participant activities only.
+- Relays, heats, flights, lanes, results, live updates, and complex competition rounds are outside the initial MVP.
+- The data model should leave room for these features later without requiring them now.
 - Prioritize working behavior and understandable structure over visual polish.
 - Produce a real full-stack prototype, not only a visual mockup.
 - Do not allow future features to expand the MVP without an explicit scope decision.
@@ -142,72 +145,120 @@ For an intentionally smaller MVP, the backend/API boundary may be implemented us
 
 Architecture should evolve from demonstrated needs. Avoid adding layers solely because a larger production system might eventually need them.
 
-## 7. Preliminary Data Model
+## 7. Initial Data Model
 
-**Status: Proposed; entity names, fields, and relationships are not final**
+**Status: Decided for the initial implementation**
 
-### Event / Meet
+The first implementation will use a small normalized data model that supports the spectator experience while remaining expandable.
 
-Likely responsibilities:
+### Meet
 
-- Unique ID
-- Short lookup code
-- Name
-- Date or date range
-- General location
+A meet is the overall scheduled event.
 
-### Participant / Athlete
+Likely fields:
 
-Likely responsibilities:
+- `id`
+- `code`
+- `name`
+- `date`
+- `venue`
 
-- Unique ID
-- Display name
-- Team or group association, when relevant
+### Participant
 
-### Team / Group
+A participant is an individual athlete competing in the meet.
 
-Likely responsibilities:
+Likely fields:
 
-- Unique ID
-- Name
-- Event-specific or reusable association, to be decided
+- `id`
+- `meet_id`
+- `name`
+- `team`
 
-### Scheduled Activity / Scheduled Event
+### Activity
 
-Likely responsibilities:
+An activity is one scheduled individual event, such as the 100m Dash or Long Jump.
 
-- Unique ID
-- Parent event/meet
-- Name or activity type
-- Scheduled start time
-- Location
-- Optional status, later if live tracking is introduced
+Likely fields:
 
-The term “scheduled activity” may be clearer in the data model than “event,” because the overall meet is also an event. Final naming remains open.
+- `id`
+- `meet_id`
+- `name`
+- `start_time`
+- `location`
 
-### Location
+The initial version will use one start time and one text location for each activity.
 
-Likely responsibilities:
+### Entry
 
-- Unique ID
-- Name or label
-- Optional event-specific details
+An entry connects a participant to an activity.
 
-For the MVP, a location might instead be stored directly on a scheduled activity if a separate table would add complexity without current value.
+Likely fields:
 
-### Participant ↔ Scheduled Activity
+- `participant_id`
+- `activity_id`
 
-A participant may enter many scheduled activities, and a scheduled activity may contain many participants. This implies a many-to-many relationship, likely represented by a join table such as `participant_activities` or `entries`.
+This relationship supports the core use case:
 
-This relationship enables the core query:
+- One participant may participate in multiple activities.
+- One activity may include multiple participants.
+- A spectator may follow multiple participants.
+- The application can filter activities through participant entries.
 
-> Return all scheduled activities in this event involving the participants the spectator selected.
+The initial implementation will support individual events only. Relay teams, heats, flights, lanes, results, and live status information are future extensions.
 
 ### Spectator selections / following
 
 **Status: Proposed / Open**
 
 The MVP needs a way to remember which participants are selected during use. It is not yet decided whether selections should live only in React state, persist in browser storage, or belong to an authenticated user account. Accounts are not currently an MVP requirement.
+
+## 8. Organizer Schedule Input
+
+**Status: Proposed**
+
+The organizer-friendly input format should be a spreadsheet or CSV with one row for each participant's entry in an activity.
+
+Example:
+
+```csv
+meet_code,participant_name,team,event_name,start_time,location
+5555,Avery Smith,Lincoln HS,100m Dash,2026-10-10 09:00,Track
+5555,Avery Smith,Lincoln HS,Long Jump,2026-10-10 09:30,Field 1
+5555,Jordan Lee,Central HS,100m Dash,2026-10-10 09:00,Track
+```
+
+This format is intentionally simple for organizers to create or export.
+
+The application should not treat this flat spreadsheet as its permanent database structure. Instead, the application should transform the rows into:
+
+```text
+Meet
+Participants
+Activities
+Entries
+```
+
+This keeps the organizer input simple while preserving a normalized structure for database queries and future features.
+
+A spreadsheet upload interface is not required for the initial MVP. Initial sample data may be entered directly as JavaScript seed data.
+
+## 9. Development Seed Data
+
+**Status: Proposed**
+
+Before connecting the application to Supabase, the project will use a JavaScript seed data file containing one realistic mock meet.
+
+The seed data should use the same conceptual structure as the planned database:
+
+- One meet
+- Multiple individual participants
+- Multiple activities
+- Participant-to-activity entries
+- Activity start times and locations
+
+The seed file will allow the React application to demonstrate the full spectator flow without requiring database setup immediately.
+
+The seed data should be structured so that it can later be replaced by Supabase queries without requiring major changes to the schedule components.
 
 ## 8. CSE 199 Scope and Constraints
 
@@ -226,26 +277,26 @@ Scope principles:
 - Prefer a thin, complete vertical slice over many partially built features.
 - Keep stretch features outside the MVP unless the core experience is already working.
 
-## 9. Development Roadmap
+## 10. Development Roadmap
 
 **Status: Proposed working sequence**
 
 1. Build or refine the simple React prototype and navigation flow.
-2. Define the smallest database schema that supports one meet, its participants, and its schedule.
-3. Create the Supabase project and tables.
-4. Add realistic sample data.
-5. Connect the React frontend to Supabase through the chosen data-access approach.
-6. Implement event-code lookup and event loading.
-7. Display the full schedule with times and locations.
-8. Display participants and allow spectators to select multiple people.
-9. Filter the schedule into a personalized “My Schedule” view.
+2. Define the initial meet, participant, activity, and entry data model.
+3. Create a JavaScript seed file containing one realistic individual-event meet.
+4. Display the full schedule from the seed data.
+5. Display participants and allow spectators to select multiple people.
+6. Display the personalized schedule.
+7. Create the Supabase project and tables using the same data model.
+8. Replace or supplement seed data with Supabase data.
+9. Implement event-code lookup and event loading.
 10. Test the main path, empty states, invalid codes, and basic failure cases.
 11. Improve usability and visual presentation only after the full flow works.
 12. Document the architecture, decisions, setup, and known limitations.
 
 The roadmap is adjustable. Each stage should produce something understandable and testable before more scope is added.
 
-## 10. Learning and Portfolio Goals
+## 11. Learning and Portfolio Goals
 
 **Status: Decided**
 

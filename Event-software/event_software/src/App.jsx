@@ -2,29 +2,47 @@ import { useState } from 'react'
 import './App.css'
 import JoinMeet from './components/joinMeet'
 import Meet from './components/meet'
+import FullSchedule from './components/fullSchedule'
 
 function App() {
   const [activeMeet, setActiveMeet] = useState(null);
+  const [activeView, setActiveView] = useState('meet')
   const [error, setError] = useState('');
 
-  const validMeetCode = '5555';
-
-  function handleJoin(submittedCode) {
+  async function handleJoin(submittedCode) {
     const normalizedCode = submittedCode.trim()
+    setError('')
 
-    if (normalizedCode !== validMeetCode){
-      setError('Invalid code. Try again.')
+    if (!normalizedCode) {
+      setError('Enter a meet code.')
       return
     }
 
-    setError('')
-    setActiveMeet({
-      code: normalizedCode,
-    })
+    try {
+      const response = await fetch(
+        `http://localhost:5069/meets/${encodeURIComponent(normalizedCode)}`
+      )
+
+      if (!response.ok) {
+        throw new Error(`API returned status ${response.status}`)
+      }
+
+      const meet = await response.json()
+      setActiveMeet(meet)
+      setActiveView('meet')
+    } catch (err) {
+      console.error('Joining meet failed:', err)
+      setError('Could not load the meet. Check that the API is running.')
+    }
   }
 
   function handleLeaveMeet(){
     setActiveMeet(null)
+    setActiveView('meet')
+  }
+
+  function handleViewFullSchedule(){
+    setActiveView('fullSchedule')
   }
 
   if (activeMeet === null) {
@@ -36,10 +54,20 @@ function App() {
     )
   }
 
+  if (activeView === 'fullSchedule') {
+    return (
+      <FullSchedule
+        meet={activeMeet}
+        onBack={() => setActiveView('meet')}
+      />
+    )
+  }
+
   return (
     <Meet 
       meet={activeMeet}
       onLeave={handleLeaveMeet}
+      onViewFullSchedule={handleViewFullSchedule}
     />
   )
 }
