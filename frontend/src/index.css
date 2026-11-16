@@ -1,0 +1,120 @@
+/* Shared design values: use var(--color-navy), etc. in component CSS. */
+:root {
+  --color-navy: #192e47;
+  --color-navy-dark: #122237;
+  --color-orange: #f39771;
+  --color-coral: #ef9a83;
+  --color-coral-soft: #fff1eb;
+  --color-background: #f7f8fa;
+  --color-surface: #ffffff;
+  --color-text: #24364b;
+  --color-muted: #637184;
+  --color-border: #e3e8ee;
+  --color-focus: #294c70;
+
+  /* Stable avatar pairs: background + readable initials. */
+  --avatar-rose-bg: #f4c8d2;
+  --avatar-rose-text: #713d50;
+  --avatar-blue-bg: #c5ddf4;
+  --avatar-blue-text: #294c70;
+  --avatar-gold-bg: #f6dfa3;
+  --avatar-gold-text: #73551d;
+  --avatar-sage-bg: #c9e4d2;
+  --avatar-sage-text: #305d44;
+  --avatar-lavender-bg: #ddd0f4;
+  --avatar-lavender-text: #514078;
+
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --heading: var(--sans);
+  --mono: ui-monospace, Consolas, monospace;
+  --content-max-width: 1208px;
+  --page-gutter: 24px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --radius-control: 8px;
+  --radius-card: 12px;
+
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--color-text);
+  background: var(--color-background);
+  color-scheme: light;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-family: var(--heading);
+  font-weight: 650;
+  line-height: 1.2;
+  color: var(--color-navy);
+  overflow-wrap: anywhere;
+}
+
+h1 {
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  letter-spacing: -0.04em;
+}
+
+h2 {
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+h3 {
+  font-size: 1.125rem;
+}
+
+p {
+  margin: 0;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+img,
+svg {
+  max-width: 100%;
+}
+
+code {
+  font-family: var(--mono);
+}
+
+@media (max-width: 680px) {
+  :root {
+    --page-gutter: 20px;
+  }
+}

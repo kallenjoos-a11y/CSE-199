@@ -1,0 +1,104 @@
+/* Full-width application frame. Header styling lives in EventHeader.css. */
+#root {
+  width: 100%;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* App currently returns a plain div around the header and active screen. */
+#root > div {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Reusable content container for the upcoming viewer JSX. */
+.page-container {
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+  padding: var(--space-8) var(--page-gutter);
+}
+
+/* Keep existing screens usable while their JSX is built component by component.
+   Replace #center with each screen's own class during that work. */
+#center {
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+  padding: var(--space-8) var(--page-gutter);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-6);
+  text-align: center;
+}
+
+#center > form {
+  width: 100%;
+  max-width: 448px;
+}
+
+/* Existing JoinMeet button; move into joinMeet.css with the join-screen work. */
+.counter {
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--color-navy);
+  border-radius: var(--radius-control);
+  background: var(--color-navy);
+  color: var(--color-surface);
+}
+
+.counter:hover {
+  background: var(--color-navy-dark);
+}
+
+/* Preserve the existing full schedule until reusable schedule components exist. */
+#center.full-schedule {
+  max-width: 808px;
+}
+
+.schedule-list {
+  width: 100%;
+  display: grid;
+  gap: var(--space-4);
+}
+
+.activity-card {
+  width: 100%;
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.activity-card h2,
+.activity-card h3 {
+  margin-bottom: var(--space-2);
+}
+
+.activity-card h3 {
+  margin-top: var(--space-4);
+}
+
+.activity-card ul {
+  margin-bottom: 0;
+  padding-left: var(--space-6);
+}
+
+@media (max-width: 680px) {
+  .page-container,
+  #center {
+    padding-block: var(--space-6);
+  }
+
+  #center {
+    gap: var(--space-4);
+  }
+}
