@@ -19,6 +19,10 @@ public class MeetDbContext : DbContext
         .Property(meet => meet.MeetCode)
         .HasMaxLength(4)
         .IsRequired();
+
+        modelBuilder.Entity<Meet>()
+        .HasIndex(meet => meet.MeetCode)
+        .IsUnique();
     }
     
 }

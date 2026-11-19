@@ -1,7 +1,8 @@
 namespace MeetM.Models;
 using System.ComponentModel.DataAnnotations;
+using MeetCG.Services;
 
-public class Meet
+public class Meet : IValidatableObject
 {
     public int Id { get; set; }
 

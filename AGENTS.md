@@ -7,7 +7,7 @@ This repository contains the BeThere event software:
 - `backend/BeThere/` — ASP.NET Core/.NET backend targeting .NET 10.
 - `frontend/` — React, JavaScript, Vite, and plain CSS frontend.
 - `BeThere.slnx` — .NET solution.
-- `frontend/PROJECT_CONTEXT.md` — authoritative source for product decisions, scope, milestones, and learning goals.
+- `PROJECT_CONTEXT.md` — authoritative source for product decisions, scope, milestones, and learning goals.
 
 Read the relevant sections of `PROJECT_CONTEXT.md` before planning work. This file complements that document; it must not duplicate its roadmap or decision log. Current explicit user decisions take precedence over older documentation, historical notes, or assumptions found in code.
 
